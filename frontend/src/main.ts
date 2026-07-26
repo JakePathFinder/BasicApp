@@ -86,9 +86,10 @@ export class AppComponent {
   loading = signal(false);
   error = signal<string | null>(null);
 
-  // Base URL of the backend API. Overridden at container runtime via env.js if present.
+  // Base URL of the backend API. Injected at container runtime via env.js
+  // (see docker-env.sh); falls back to localhost for non-container dev.
   private readonly apiBase =
-    (window as any).__API_BASE__ ?? 'http://localhost:8080';
+    (window as any).__API_BASE__ || 'http://localhost:8080';
 
   constructor(private http: HttpClient) {}
 

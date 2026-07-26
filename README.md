@@ -40,6 +40,35 @@ on the backend and renders the 5-day forecast in a table.
 docker compose down
 ```
 
+## Deploy to Fly.io
+
+The app deploys as **two Fly apps** (Fly runs one app per Dockerfile — it does not
+use `docker-compose.yml`). Each subdirectory has its own `fly.toml`.
+
+Deploy the **backend** first:
+
+```bash
+cd backend
+fly launch --copy-config --no-deploy --name basicapp-backend --region fra
+fly deploy
+```
+
+Then the **frontend**:
+
+```bash
+cd ../frontend
+fly launch --copy-config --no-deploy --name basicapp-frontend --region fra
+fly deploy
+```
+
+Notes:
+
+- The frontend's `fly.toml` sets `API_BASE = "https://basicapp-backend.fly.dev"`,
+  which is injected into the browser at runtime (via `docker-env.sh` → `env.js`).
+  If you name the backend app differently, update `API_BASE` to match.
+- Ports are already set: backend `internal_port = 8080`, frontend `internal_port = 80`.
+- The backend has permissive CORS, so the frontend origin can call it directly.
+
 ## How it fits together
 
 - The backend listens on port `8080` (mapped to host `8080`) and has permissive CORS

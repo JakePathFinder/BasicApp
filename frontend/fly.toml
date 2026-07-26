@@ -1,0 +1,24 @@
+# Fly.io config for the frontend (Angular SPA served by nginx).
+# Deploy from this directory:  fly deploy
+#
+# API_BASE points the browser UI at the backend's public URL.
+# Update it if you named the backend app something other than basicapp-backend.
+app = "basicapp-frontend"
+primary_region = "fra"
+
+[build]
+
+[env]
+  API_BASE = "https://basicapp-backend.fly.dev"
+
+[http_service]
+  internal_port = 80
+  force_https = true
+  auto_stop_machines = "stop"
+  auto_start_machines = true
+  min_machines_running = 0
+
+[[vm]]
+  memory = "256mb"
+  cpu_kind = "shared"
+  cpus = 1
